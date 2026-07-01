@@ -1,0 +1,7 @@
+# Ignore node_modules or python virtual environments
+   **/node_modules/
+*.zip
+   .venv/
+   venv/
+   *.log
+   .env*.pyc
