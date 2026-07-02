@@ -5,3 +5,5 @@
    venv/
    *.log
    .env*.pyc
+# Lambda dependencies - installed fresh by CI
+Lambda/*/node_modules/
