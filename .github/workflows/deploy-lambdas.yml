@@ -1,0 +1,35 @@
+name: Deploy Lambdas to AWS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Lambda/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Zip and deploy each Lambda function
+        run: |
+          FUNCTIONS="RN_GetDailyOrders RN_ScanBill RN_GetProducts RN_GenerateBill RN_UpdateOrderStatus RN_AddStock RN_TelegramHandler RN_PlaceOrder RN_LowStockAgent RN_DaySummaryAgent RN_LowStockAlert RN_GetInventory"
+          for fn in $FUNCTIONS; do
+            echo "=== Deploying $fn ==="
+            cd Lambda/$fn
+            zip -rq ../../${fn}_deploy.zip .
+            cd ../..
+            aws lambda update-function-code \
+              --function-name $fn \
+              --zip-file fileb://${fn}_deploy.zip
+            rm ${fn}_deploy.zip
+          done
