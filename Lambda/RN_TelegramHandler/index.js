@@ -8,7 +8,7 @@ const { DynamoDBClient, PutItemCommand, GetItemCommand, ScanCommand } = require(
 const { marshall, unmarshall } = require("@aws-sdk/util-dynamodb");
 const dynamo = new DynamoDBClient({ region: "ap-south-1" });
 
-const BOT_TOKEN = "8749440870:AAF_Iu3KVUSnSjpl2gSKr-sin_AaWHG3Sts";
+const BOT_TOKEN = process.env.BOT_TOKEN;
 const TAPI = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
 // ── Send Telegram message ─────────────────────────────────────────────────────
